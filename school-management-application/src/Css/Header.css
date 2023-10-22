@@ -1,0 +1,35 @@
+.header{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    height: 10vh;
+    background-color: #94a3b8;
+    box-shadow: 0 0 5px 2px ; 
+    background: inherit; 
+    backdrop-filter: blur(10px);
+}
+
+.header > img {
+    width: 40px;
+    height: 40px;
+}
+
+.navlink{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.header-links{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+.studentName{
+    text-decoration: none;
+    color: #fff;
+}
