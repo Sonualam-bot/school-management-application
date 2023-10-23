@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// const BASE_URL = "https://school-management-system-3bma.onrender.com/api/v1";
-const BASE_URL = "http://localhost:4000/api/v1";
+const BASE_URL = "https://school-management-system-3bma.onrender.com/api/v1";
 
 export const fetchStudents = createAsyncThunk(
   "students/fetchStudents",
@@ -35,7 +34,6 @@ export const deleteStudentAsync = createAsyncThunk(
   "students/deleteStudentAsync",
   async (id) => {
     const response = await axios.delete(`${BASE_URL}/student/delete/${id}`);
-    console.log(response);
     return response.data.student;
   }
 );

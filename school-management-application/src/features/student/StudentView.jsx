@@ -65,7 +65,7 @@ export const StudentView = () => {
   const filterByClass =
     byClass === "All"
       ? sortedStudent
-      : sortedStudent?.filter((std) => std.studentClass === byClass);
+      : sortedStudent?.filter((std) => std.studentClass == byClass);
 
   useEffect(() => {
     if (status === "idle") {
