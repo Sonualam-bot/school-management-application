@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "../Css/Homepage.css";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { fetchStudents } from "../features/student/studentSlice";
+import { fetchStudents } from "../../src/features/student/studentSlice";
 import { fetchTeachers } from "../features/teacher/TeacherSlice";
 
 export const Homempage = () => {
