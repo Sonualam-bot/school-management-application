@@ -49,3 +49,11 @@
     text-decoration: none;
     color: #fff;
 }
+
+.homeHeroSection{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    width: 90vw;
+}
