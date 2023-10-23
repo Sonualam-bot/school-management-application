@@ -1,9 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../Css/Homepage.css";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { fetchStudents } from "../features/student/StudentSlice";
+import { fetchTeachers } from "../features/teacher/TeacherSlice";
 
 export const Homempage = () => {
   const student = useSelector((state) => state.students.students);
+  const dispatch = useDispatch();
 
   const highestMarks = Math.max(...student.map((student) => student.marks));
   const topStudents = student.filter(
@@ -15,6 +19,11 @@ export const Homempage = () => {
 
   const averageMarks =
     student?.reduce((acc, curr) => acc + +curr.marks, 0) / student.length;
+
+  useEffect(() => {
+    dispatch(fetchStudents());
+    dispatch(fetchTeachers());
+  }, []);
 
   return (
     <>
