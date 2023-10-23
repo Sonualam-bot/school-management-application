@@ -1,71 +1,68 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+// const BASE_URL = "https://school-management-system-3bma.onrender.com/api/v1";
+const BASE_URL = "http://localhost:4000/api/v1";
+
+export const fetchStudents = createAsyncThunk(
+  "students/fetchStudents",
+  async () => {
+    const response = await axios.get(`${BASE_URL}/student/all`);
+    return response.data.student;
+  }
+);
+
+export const addStudentAsync = createAsyncThunk(
+  "students/addStudentAsync",
+  async (newStudent) => {
+    const response = await axios.post(`${BASE_URL}/student/new`, newStudent);
+    return response.data.student;
+  }
+);
+
+export const updateStudentAsync = createAsyncThunk(
+  "students/updateStudentAsync",
+  async ({ id, updatedStudent }) => {
+    const response = await axios.post(
+      `${BASE_URL}/student/edit/${id}`,
+      updatedStudent
+    );
+    return response.data.student;
+  }
+);
+
+export const deleteStudentAsync = createAsyncThunk(
+  "students/deleteStudentAsync",
+  async (id) => {
+    const response = await axios.delete(`${BASE_URL}/student/delete/${id}`);
+    console.log(response);
+    return response.data.student;
+  }
+);
 
 const initialState = {
-  students: [
-    {
-      id: 1,
-      name: "Tomy Egan",
-      age: 25,
-      grade: "A",
-      studentClass: "12",
-      gender: "Male",
-      attendance: 50,
-      marks: 50,
-    },
-    {
-      id: 2,
-      name: "Jane Doe",
-      age: 26,
-      grade: "A",
-      studentClass: "10",
-      gender: "Male",
-      attendance: 100,
-      marks: 100,
-    },
-    {
-      id: 3,
-      name: "Monkey D. Luffy",
-      age: 24,
-      grade: "A",
-      studentClass: "12",
-      gender: "Female",
-      attendance: 75,
-      marks: 80,
-    },
-    {
-      id: 4,
-      name: "Ichigo Kurosaki",
-      age: 23,
-      grade: "A",
-      studentClass: "10",
-      gender: "Female",
-      attendance: 75,
-      marks: 80,
-    },
-  ],
+  students: [],
+  status: "idle",
   studentDetails: {
     name: "",
     age: "",
     grade: "",
     studentClass: "",
-    gender: {
-      male: "",
-      female: "",
-    },
+    gender: "",
     attendance: "",
     marks: "",
   },
   sortBy: "",
 };
 
-const studentReducer = createSlice({
-  name: "student",
+const StudentSlice = createSlice({
+  name: "students",
   initialState,
   reducers: {
-    addStudent: (state, action) => ({
-      ...state,
-      students: [...state.students, action.payload],
-    }),
+    // addStudent: (state, action) => ({
+    //   ...state,
+    //   students: [...state.students, action.payload],
+    // }),
     deleteStudent: (state, action) => ({
       ...state,
       students: state.students.filter(
@@ -82,7 +79,7 @@ const studentReducer = createSlice({
       });
       return { ...state, students: newStudentData };
     },
-    studentInput: (state, action) => ({
+    setStudentInput: (state, action) => ({
       ...state,
       studentDetails: action.payload,
     }),
@@ -91,14 +88,69 @@ const studentReducer = createSlice({
       sortBy: action.payload,
     }),
   },
+  extraReducers: {
+    [fetchStudents.pending]: (state) => {
+      state.status = "loading";
+    },
+    [fetchStudents.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.students = action.payload;
+    },
+    [fetchStudents.rejected]: (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    },
+
+    [addStudentAsync.pending]: (state) => {
+      state.status = "loading";
+    },
+    [addStudentAsync.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.students.push(action.payload);
+    },
+    [addStudentAsync.rejected]: (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    },
+    [updateStudentAsync.pending]: (state) => {
+      state.status = "loading";
+    },
+    [updateStudentAsync.fulfilled]: (state, action) => {
+      state.status = "success";
+      const updatedStudent = action.payload;
+      const index = state.students.findIndex(
+        (s) => s._id === updatedStudent._id
+      );
+      if (index !== -1) {
+        state.students[index] = updatedStudent;
+      }
+    },
+    [updateStudentAsync.rejected]: (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    },
+    [deleteStudentAsync.pending]: (state) => {
+      state.status = "loading";
+    },
+    [deleteStudentAsync.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.students = state.students.filter(
+        (student) => student._id !== action.payload._id
+      );
+    },
+    [deleteStudentAsync.rejected]: (state, action) => {
+      state.status = "error";
+      state.error = action.error.message;
+    },
+  },
 });
 
 export const {
   addStudent,
   deleteStudent,
-  studentInput,
+  setStudentInput,
   editStudent,
   sortByGender,
-} = studentReducer.actions;
+} = StudentSlice.actions;
 
-export default studentReducer.reducer;
+export default StudentSlice.reducer;

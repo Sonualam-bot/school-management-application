@@ -5,6 +5,7 @@ async function createNewStudent(studentData) {
     const newStudent = await Student.create(studentData);
     return newStudent;
   } catch (error) {
+    console.error(error);
     throw new Error(`${error}`);
   }
 }
@@ -12,6 +13,7 @@ async function createNewStudent(studentData) {
 async function deleteStudentData(id) {
   try {
     const deleteStudent = await Student.findByIdAndDelete({ _id: id });
+    console.log(deleteStudent);
     return deleteStudent;
   } catch (error) {
     throw new Error(`${error}`);

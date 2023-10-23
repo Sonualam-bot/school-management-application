@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import studentReducer from "./features/student/studentSlice";
+import studentReducer from "./features/student/StudentSlice";
 import teacherReducer from "./features/teacher/TeacherSlice";
 
 const store = configureStore({

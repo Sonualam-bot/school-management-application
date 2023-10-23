@@ -65,6 +65,7 @@ studentRouter.delete("/student/delete/:studentID", async (req, res) => {
     const studentID = req.params.studentID;
 
     const findStudentAndDelete = await deleteStudentData(studentID);
+    console.log(findStudentAndDelete);
 
     if (!findStudentAndDelete) {
       res.status(401).json({
@@ -76,6 +77,7 @@ studentRouter.delete("/student/delete/:studentID", async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Successfully deleted student by ID",
+      student: findStudentAndDelete,
     });
   } catch (error) {
     res.status(500).json({

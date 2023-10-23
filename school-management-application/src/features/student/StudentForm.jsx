@@ -1,5 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addStudent, editStudent, studentInput } from "./studentSlice";
+import {
+  addStudentAsync,
+  setStudentInput,
+  updateStudentAsync,
+} from "./studentSlice";
 import "../../Css/Student.css";
 import "../../Css/Teacher.css";
 
@@ -8,52 +12,50 @@ export const StudentForm = ({
   setEditStatus,
   setShowStudentForm,
 }) => {
-  const student = useSelector((state) => state.students.students);
   const studentDetails = useSelector((state) => state.students.studentDetails);
 
   const dispatch = useDispatch();
 
   const handleStudentFormInput = (e) => {
     const { name, value } = e.target;
-    dispatch(studentInput({ ...studentDetails, [name]: value }));
+    dispatch(setStudentInput({ ...studentDetails, [name]: value }));
   };
 
   const handleAddStudent = (e) => {
     e.preventDefault();
 
     if (editStatus) {
-      dispatch(editStudent(studentDetails));
+      dispatch(
+        updateStudentAsync({
+          id: studentDetails._id,
+          updatedStudent: studentDetails,
+        })
+      );
       setEditStatus(false);
       setShowStudentForm(false);
       dispatch(
-        studentInput({
+        setStudentInput({
           name: "",
           age: "",
           grade: "",
           studentClass: "",
-          gender: {
-            male: "",
-            female: "",
-          },
+          gender: "",
           attendance: "",
           marks: "",
         })
       );
     } else {
-      const data = { ...studentDetails, id: student.length + 1 };
-      dispatch(addStudent(data));
+      // const data = { ...studentDetails, id: student.length + 1 };
+      dispatch(addStudentAsync(studentDetails));
       setEditStatus(false);
       setShowStudentForm(false);
       dispatch(
-        studentInput({
+        setStudentInput({
           name: "",
           age: "",
           grade: "",
           studentClass: "",
-          gender: {
-            male: "",
-            female: "",
-          },
+          gender: "",
           attendance: "",
           marks: "",
         })
@@ -113,8 +115,8 @@ export const StudentForm = ({
               <input
                 type="radio"
                 name="gender"
-                value="male"
-                checked={studentDetails?.gender === "male"}
+                value="Male"
+                checked={studentDetails?.gender === "Male"}
                 placeholder=""
                 onChange={handleStudentFormInput}
               />
@@ -122,8 +124,8 @@ export const StudentForm = ({
               <input
                 type="radio"
                 name="gender"
-                value="female"
-                checked={studentDetails?.gender === "female"}
+                value="Female"
+                checked={studentDetails?.gender === "Female"}
                 placeholder=""
                 onChange={handleStudentFormInput}
               />

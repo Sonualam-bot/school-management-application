@@ -1,11 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
 import "../../Css/Student.css";
-import { deleteStudent, studentInput } from "./studentSlice";
+
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StudentForm } from "./StudentForm";
+import {
+  deleteStudentAsync,
+  fetchStudents,
+  setStudentInput,
+} from "./studentSlice";
 
 export const StudentView = () => {
+  // const setStudentInput = useSelector((state) => state.students.studentDetails);
+  const status = useSelector((state) => state.students.status);
   const student = useSelector((state) => state.students.students);
 
   const [showStudentForm, setShowStudentForm] = useState(false);
@@ -16,12 +23,12 @@ export const StudentView = () => {
 
   const dispatch = useDispatch();
 
-  const handleDelete = (id) => {
-    dispatch(deleteStudent(id));
-  };
+  // const handleDelete = (id) => {
+  //   dispatch(deleteStudent(id));
+  // };
 
   const handleEditStudent = (studentData) => {
-    dispatch(studentInput(studentData));
+    dispatch(setStudentInput(studentData));
     setEditStatus(true);
     setShowStudentForm(true);
   };
@@ -60,6 +67,16 @@ export const StudentView = () => {
       ? sortedStudent
       : sortedStudent?.filter((std) => std.studentClass === byClass);
 
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchStudents());
+    }
+  }, [status, dispatch]);
+
+  const deleteStd = (id) => {
+    dispatch(deleteStudentAsync(id));
+  };
+
   return (
     <>
       <div className="teacherView-container">
@@ -68,7 +85,7 @@ export const StudentView = () => {
           className="add-teacher-btn"
           onClick={() => setShowStudentForm(!showStudentForm)}
         >
-          Add New Teacher
+          Add New Student
         </button>
 
         <div className="table-container">
@@ -107,6 +124,7 @@ export const StudentView = () => {
               </select>
             </fieldset>
           </div>
+
           <table>
             <thead>
               <tr>
@@ -124,7 +142,7 @@ export const StudentView = () => {
             <tbody>
               {filterByClass?.map((student, index) => {
                 const {
-                  id,
+                  _id,
                   name,
                   age,
                   grade,
@@ -134,11 +152,11 @@ export const StudentView = () => {
                   marks,
                 } = student;
                 return (
-                  <tr key={id}>
+                  <tr key={_id}>
                     <td>{index + 1}</td>
                     <td>
                       {" "}
-                      <Link className="studentName" to={`/details/${id}`}>
+                      <Link className="studentName" to={`/details/${_id}`}>
                         {" "}
                         {name}
                       </Link>
@@ -154,7 +172,7 @@ export const StudentView = () => {
                         <span onClick={() => handleEditStudent(student)}>
                           edit
                         </span>
-                        <span onClick={() => handleDelete(id)}>delete</span>
+                        <span onClick={() => deleteStd(_id)}>delete</span>
                       </div>
                     </td>
                   </tr>

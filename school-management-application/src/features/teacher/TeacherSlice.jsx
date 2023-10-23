@@ -29,7 +29,7 @@ const initialState = {
   },
 };
 
-const teacherReducer = createSlice({
+const teacherSlice = createSlice({
   name: "teacher",
   initialState,
   reducers: {
@@ -64,6 +64,6 @@ const teacherReducer = createSlice({
 });
 
 export const { addTeacher, deleteTeacher, teacherInput, editTeacher } =
-  teacherReducer.actions;
+  teacherSlice.actions;
 
-export default teacherReducer.reducer;
+export default teacherSlice.reducer;
