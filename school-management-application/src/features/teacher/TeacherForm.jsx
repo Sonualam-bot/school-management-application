@@ -1,41 +1,48 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addTeacher, editTeacher, teacherInput } from "./TeacherSlice";
+import {
+  addTeacherAsync,
+  setTeacherInput,
+  updateTeacherAsync,
+} from "./TeacherSlice";
 
 export const TeacherForm = ({
   editTeacherStatus,
   setShowAddTeacherForm,
   setEditTeacherStatus,
 }) => {
-  const teacher = useSelector((state) => state.teachers.teachers);
   const teacherDetails = useSelector((state) => state.teachers.teacherDetails);
 
   const dispatch = useDispatch();
 
   const handleTeacherFormInput = (e) => {
     const { name, value } = e.target;
-    dispatch(teacherInput({ ...teacherDetails, [name]: value }));
+    dispatch(setTeacherInput({ ...teacherDetails, [name]: value }));
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (editTeacherStatus) {
-      dispatch(editTeacher(teacherDetails));
+      dispatch(
+        updateTeacherAsync({
+          id: teacherDetails._id,
+          updatedTeacher: teacherDetails,
+        })
+      );
       setEditTeacherStatus(false);
       setShowAddTeacherForm(false);
       dispatch(
-        teacherInput({
+        setTeacherInput({
           name: "",
           subject: "",
           contactInfo: "",
         })
       );
     } else {
-      const data = { ...teacherDetails, id: teacher.length + 1 };
-      dispatch(addTeacher(data));
+      dispatch(addTeacherAsync(teacherDetails));
       setEditTeacherStatus(false);
       setShowAddTeacherForm(false);
       dispatch(
-        teacherInput({
+        setTeacherInput({
           name: "",
           subject: "",
           contactInfo: "",

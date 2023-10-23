@@ -11,7 +11,6 @@ import {
 } from "./studentSlice";
 
 export const StudentView = () => {
-  // const setStudentInput = useSelector((state) => state.students.studentDetails);
   const status = useSelector((state) => state.students.status);
   const student = useSelector((state) => state.students.students);
 
@@ -22,10 +21,6 @@ export const StudentView = () => {
   const [byClass, setByClass] = useState("All");
 
   const dispatch = useDispatch();
-
-  // const handleDelete = (id) => {
-  //   dispatch(deleteStudent(id));
-  // };
 
   const handleEditStudent = (studentData) => {
     dispatch(setStudentInput(studentData));
@@ -88,109 +83,118 @@ export const StudentView = () => {
           Add New Student
         </button>
 
-        <div className="table-container">
-          <div className="sortBySection">
-            <fieldset>
-              <legend>Sort By Gender</legend>
-
-              <select onChange={(e) => getStudentGender(e)}>
-                <option value="">Select Gender</option>
-
-                <option name="gender" value="Male">
-                  Male
-                </option>
-                <option name="gender" value="Female">
-                  Female
-                </option>
-              </select>
-
-              <select onChange={(e) => setSortBy(e.target.value)}>
-                <option>Sort By</option>
-                <option value="name">Name</option>
-                <option value="age">Age</option>
-                <option value="attendance">Attendance</option>
-                <option value="marks">Marks</option>
-              </select>
-
-              <select onChange={(e) => setByClass(e.target.value)}>
-                <option value="All">filter By Class</option>
-                {numberOfClass?.map((stdClass) => {
-                  return (
-                    <option value={stdClass} key={stdClass}>
-                      {stdClass}
-                    </option>
-                  );
-                })}
-              </select>
-            </fieldset>
+        {status === "loading" ? (
+          <div>
+            {" "}
+            <h1>Loading....</h1>{" "}
           </div>
+        ) : (
+          <div>
+            <div className="table-container">
+              <div className="sortBySection">
+                <fieldset>
+                  <legend>Sort By Gender</legend>
 
-          <table>
-            <thead>
-              <tr>
-                <td>Sn. No</td>
-                <td>Name</td>
-                <td>Age</td>
-                <td>Grade</td>
-                <td>Class</td>
-                <td>Gender</td>
-                <td>Attendance</td>
-                <td>Marks</td>
-                <td>Update</td>
-              </tr>
-            </thead>
-            <tbody>
-              {filterByClass?.map((student, index) => {
-                const {
-                  _id,
-                  name,
-                  age,
-                  grade,
-                  studentClass,
-                  gender,
-                  attendance,
-                  marks,
-                } = student;
-                return (
-                  <tr key={_id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      {" "}
-                      <Link className="studentName" to={`/details/${_id}`}>
-                        {" "}
-                        {name}
-                      </Link>
-                    </td>
-                    <td>{age}</td>
-                    <td>{grade}</td>
-                    <td>{studentClass}</td>
-                    <td>{gender}</td>
-                    <td>{attendance}</td>
-                    <td>{marks}</td>
-                    <td>
-                      <div className="updateBtns">
-                        <span onClick={() => handleEditStudent(student)}>
-                          edit
-                        </span>
-                        <span onClick={() => deleteStd(_id)}>delete</span>
-                      </div>
-                    </td>
+                  <select onChange={(e) => getStudentGender(e)}>
+                    <option value="">Select Gender</option>
+
+                    <option name="gender" value="Male">
+                      Male
+                    </option>
+                    <option name="gender" value="Female">
+                      Female
+                    </option>
+                  </select>
+
+                  <select onChange={(e) => setSortBy(e.target.value)}>
+                    <option>Sort By</option>
+                    <option value="name">Name</option>
+                    <option value="age">Age</option>
+                    <option value="attendance">Attendance</option>
+                    <option value="marks">Marks</option>
+                  </select>
+
+                  <select onChange={(e) => setByClass(e.target.value)}>
+                    <option value="All">filter By Class</option>
+                    {numberOfClass?.map((stdClass) => {
+                      return (
+                        <option value={stdClass} key={stdClass}>
+                          {stdClass}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </fieldset>
+              </div>
+
+              <table>
+                <thead>
+                  <tr>
+                    <td>Sn. No</td>
+                    <td>Name</td>
+                    <td>Age</td>
+                    <td>Grade</td>
+                    <td>Class</td>
+                    <td>Gender</td>
+                    <td>Attendance</td>
+                    <td>Marks</td>
+                    <td>Update</td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {filterByClass?.map((student, index) => {
+                    const {
+                      _id,
+                      name,
+                      age,
+                      grade,
+                      studentClass,
+                      gender,
+                      attendance,
+                      marks,
+                    } = student;
+                    return (
+                      <tr key={_id}>
+                        <td>{index + 1}</td>
+                        <td>
+                          {" "}
+                          <Link className="studentName" to={`/details/${_id}`}>
+                            {" "}
+                            {name}
+                          </Link>
+                        </td>
+                        <td>{age}</td>
+                        <td>{grade}</td>
+                        <td>{studentClass}</td>
+                        <td>{gender}</td>
+                        <td>{attendance}</td>
+                        <td>{marks}</td>
+                        <td>
+                          <div className="updateBtns">
+                            <span onClick={() => handleEditStudent(student)}>
+                              edit
+                            </span>
+                            <span onClick={() => deleteStd(_id)}>delete</span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
 
-        <div>
-          {showStudentForm && (
-            <StudentForm
-              editStatus={editStatus}
-              setEditStatus={setEditStatus}
-              setShowStudentForm={setShowStudentForm}
-            />
-          )}
-        </div>
+            <div>
+              {showStudentForm && (
+                <StudentForm
+                  editStatus={editStatus}
+                  setEditStatus={setEditStatus}
+                  setShowStudentForm={setShowStudentForm}
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
