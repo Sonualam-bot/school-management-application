@@ -5,7 +5,7 @@ import "../../Css/Student.css";
 export const StudentDetail = () => {
   const { studentId } = useParams();
   const student = useSelector((state) => state.students.students);
-  const selectedStudent = student?.find((student) => student.id === +studentId);
+  const selectedStudent = student?.find((student) => student._id === studentId);
 
   const { name, age, grade, studentClass, gender, attendance, marks } =
     selectedStudent;
